@@ -13,33 +13,35 @@ export const login = async (req, res) => {
     const match = await argon2.verify(user.password, req.body.password);
     if(!match) return res.status(400).json({error: "Wrong Password"});
 
-    // --- ADD THESE TWO LINES ---
-    console.log('User object retrieved:', user.toJSON()); // Use .toJSON() for Sequelize models
-    console.log('Value of user.id:', user.id);
-    // --- END ADDITIONS ---
+    console.log('User object retrieved:', user.toJSON());
+    console.log('Value of user.id BEFORE session set:', user.id);
 
-    // --- Add these logs ---
-    console.log('Before setting session.userId:', req.session);
+    console.log('Before setting req.session.userId:', req.session);
     req.session.userId = user.id;
-    console.log('After setting session.userId:', req.session);
+    console.log('After setting req.session.userId:', req.session);
 
-    // // Ensure session is saved before sending response
-    // req.session.save((err) => {
-    //     if (err) {
-    //         console.error('Error saving session:', err);
-    //         return res.status(500).json({ error: "Session save failed" });
-    //     }
-    //     console.log('Session saved successfully. Sending response...');
+    // Explicitly check the headers before sending
+    console.log('Headers before sending response (from inside req.session.save):', res.getHeaders());
+    console.log('Are headers already sent?', res.headersSent);
 
-    //     const id = user.id;
-    //     const username = user.username;
-    //     const email = user.email;
-    //     res.status(200).json({id, username, email});
-    // });
-    const id = user.id;
-    const username = user.username;
-    const email = user.email;
-    res.status(200).json({id, username, email});
+
+    req.session.save((err) => {
+        if (err) {
+            console.error('Error saving session:', err);
+            return res.status(500).json({ error: "Session save failed" });
+        }
+        console.log('Session saved successfully. About to send response...');
+
+        // Final check on headers just before res.status().json()
+        console.log('Headers just before res.status().json():', res.getHeaders());
+        console.log('Are headers already sent (final check)?', res.headersSent);
+
+
+        const id = user.id;
+        const username = user.username;
+        const email = user.email;
+        res.status(200).json({id, username, email});
+    });
 };
 
 export const logout = async (req, res) => {
