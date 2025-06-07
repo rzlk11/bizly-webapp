@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
+app.set("trust proxy", 1);
 app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify.app" }));
 
 // const sessionStore = SequelizeStore(session.Store);
