@@ -21,23 +21,24 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify.app" }));
 
-const sessionStore = SequelizeStore(session.Store);
+// const sessionStore = SequelizeStore(session.Store);
 
-const store = new sessionStore({
-  db: sequelize,
-});
+// const store = new sessionStore({
+//   db: sequelize,
+// });
 
-store.sync();
+// store.sync();
 
 app.use(
   session({
-    store: store,
+    // store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
       secure: true,
       sameSite: "none",
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 jam dalam milliseconds
     },
   })
