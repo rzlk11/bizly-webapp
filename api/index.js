@@ -31,11 +31,11 @@ app.use(
   session({
     store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 jam dalam milliseconds
     },
