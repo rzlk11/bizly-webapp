@@ -23,19 +23,23 @@ export const login = async (req, res) => {
     req.session.userId = user.id;
     console.log('After setting session.userId:', req.session);
 
-    // Ensure session is saved before sending response
-    req.session.save((err) => {
-        if (err) {
-            console.error('Error saving session:', err);
-            return res.status(500).json({ error: "Session save failed" });
-        }
-        console.log('Session saved successfully. Sending response...');
+    // // Ensure session is saved before sending response
+    // req.session.save((err) => {
+    //     if (err) {
+    //         console.error('Error saving session:', err);
+    //         return res.status(500).json({ error: "Session save failed" });
+    //     }
+    //     console.log('Session saved successfully. Sending response...');
 
-        const id = user.id;
-        const username = user.username;
-        const email = user.email;
-        res.status(200).json({id, username, email});
-    });
+    //     const id = user.id;
+    //     const username = user.username;
+    //     const email = user.email;
+    //     res.status(200).json({id, username, email});
+    // });
+    const id = user.id;
+    const username = user.username;
+    const email = user.email;
+    res.status(200).json({id, username, email});
 };
 
 export const logout = async (req, res) => {
