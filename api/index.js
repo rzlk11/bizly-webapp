@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import sequelize from "./src/config/database.js"
 import express from "express";
 import session from "express-session";
 import authRoute from "./src/routes/authRoute.js";
@@ -32,6 +32,10 @@ app.use(
     },
   })
 );
+
+(async () => {
+  await sequelize.sync({ alter: true });
+})();
 
 // Routes
 app.get("/", (req, res) => {
