@@ -5,16 +5,20 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  withCredentials: true, // Keep this! This is crucial for sending/receiving cookies.
 });
 
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Or use a context/provider
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // *** REMOVE OR COMMENT OUT THIS SECTION FOR SESSION-BASED AUTH ***
+    // const token = localStorage.getItem("token");
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // }
+    // If you have other token-based routes (e.g., to a different microservice
+    // that uses JWTs), you'd create a *separate* axios instance for those,
+    // or conditionally add the header based on the URL.
     return config;
   },
   (error) => {
@@ -29,7 +33,6 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // You can handle logout or redirection here
       console.error("Unauthorized. Redirect to login.");
       // Example: window.location = '/login';
     }
