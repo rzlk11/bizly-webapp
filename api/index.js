@@ -3,6 +3,7 @@ dotenv.config();
 import sequelize from "./src/config/database.js"
 import express from "express";
 import session from "express-session";
+import SequelizeStore from "connect-session-sequelize";
 import authRoute from "./src/routes/authRoute.js";
 import categoriesRoute from "./src/routes/categoriesRoute.js";
 import transactionRoute from "./src/routes/transactionRoute.js";
@@ -20,8 +21,15 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify.app" }));
 
+const sessionStore = SequelizeStore(session.Store);
+
+const store = new sessionStore({
+  db: db,
+});
+
 app.use(
   session({
+    store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
     resave: false,
     saveUninitialized: false,
