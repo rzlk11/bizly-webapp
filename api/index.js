@@ -24,7 +24,7 @@ app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify
 const sessionStore = SequelizeStore(session.Store);
 
 const store = new sessionStore({
-  db: db,
+  db: sequelize,
 });
 
 app.use(
