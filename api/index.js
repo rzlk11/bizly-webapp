@@ -51,11 +51,6 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
 // routes
 app.use("/auth", authRoute);
 app.use("/categories", categoriesRoute);
@@ -64,5 +59,10 @@ app.use("/transactions", transactionRoute);
 app.use("/users", userRoute);
 app.use("/transactions-products", transactionProductRoute);
 app.use("/ml", mlRoute);
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 store.sync();

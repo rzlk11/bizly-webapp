@@ -28,9 +28,9 @@ const Login = () => {
     try {
       const { data } = await axiosInstance.post("/auth/login", formData);
 
-      localStorage.setItem("isLoggedIn", true);
-      localStorage.setItem("userId", data.id);
-      localStorage.setItem("user", JSON.stringify(data));
+      // localStorage.setItem("isLoggedIn", true);
+      // localStorage.setItem("userId", data.id);
+      // localStorage.setItem("user", JSON.stringify(data));
       console.log(data);
       navigate("/dashboard");
     } catch (error) {
