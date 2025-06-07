@@ -27,6 +27,7 @@ const store = new sessionStore({
   db: sequelize,
 });
 
+store.sync();
 
 app.use(
   session({
@@ -43,11 +44,9 @@ app.use(
   })
 );
 
-(async () => {
-  await sequelize.sync({ alter: true });
-})();
-
-store.sync();
+// (async () => {
+//   await sequelize.sync({ alter: true });
+// })();
 
 // Routes
 app.get("/", (req, res) => {
@@ -56,12 +55,12 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/auth", authRoute);
-app.use("/categories", categoriesRoute);
-app.use("/products", productsRoute);
-app.use("/transactions", transactionRoute);
-app.use("/users", userRoute);
-app.use("/transactions-products", transactionProductRoute);
-app.use("/ml", mlRoute);
+// app.use("/categories", categoriesRoute);
+// app.use("/products", productsRoute);
+// app.use("/transactions", transactionRoute);
+// app.use("/users", userRoute);
+// app.use("/transactions-products", transactionProductRoute);
+// app.use("/ml", mlRoute);
 
 // Start the server
 app.listen(PORT, () => {
