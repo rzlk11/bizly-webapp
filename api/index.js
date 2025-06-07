@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify.app/" }));
 
 app.use(
   session({
