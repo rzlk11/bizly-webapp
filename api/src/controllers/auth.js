@@ -15,7 +15,7 @@ export const login = async (req, res) => {
 
     // --- Add these logs ---
     console.log('Before setting session.userId:', req.session);
-    req.session.userId = user.uuid;
+    req.session.userId = user.id;
     console.log('After setting session.userId:', req.session);
 
     // Ensure session is saved before sending response
@@ -26,10 +26,10 @@ export const login = async (req, res) => {
         }
         console.log('Session saved successfully. Sending response...');
 
-        const uuid = user.uuid;
+        const id = user.id;
         const username = user.username;
         const email = user.email;
-        res.status(200).json({uuid, username, email});
+        res.status(200).json({id, username, email});
     });
 };
 
