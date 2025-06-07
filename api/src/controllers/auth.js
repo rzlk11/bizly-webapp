@@ -3,24 +3,51 @@ import argon2 from "argon2";
 import { sendOTP, verifyOTP as validateOTP } from '../service/otpService.js';
 
 export const login = async (req, res) => {
-  const user = await Users.findOne({
-    where: {
-      email: req.body.email,
-    },
-  });
-  if (!user) {
-    return res.status(404).json({ error: "User tidak ditemukan " });
-  }
-  const match = await argon2.verify(user.password, req.body.password);
-  if (!match) {
-    return res.status(400).json({ error: "Password atau email anda salah" });
-  }
+    const user = await Users.findOne({
+        where: {
+            email: req.body.email
+        }
+    });
+    if(!user) return res.status(404).json({error: "User not found"});
 
-  req.session.userId = user.id;
-  const id = user.id;
-  const username = user.username;
-  const email = user.email;
-  res.status(200).json({ id, username, email });
+    const match = await argon2.verify(user.password, req.body.password);
+    if(!match) return res.status(400).json({error: "Wrong Password"});
+
+    // --- TEMPORARY TEST: DO NOT USE express-session HERE ---
+    // Instead, try to set a simple cookie directly using res.cookie()
+    // This bypasses express-session entirely.
+
+    res.cookie(
+        'test_cookie', // Name of the cookie
+        'some_value_for_test', // Value of the cookie
+        {
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            httpOnly: true,
+            secure: true,      // Keep true as your frontend is HTTPS
+            sameSite: 'none',  // Keep none as your frontend is cross-origin
+            domain: '.up.railway.app' // IMPORTANT: Set domain to your backend's top-level domain
+        }
+    );
+
+    // Also, try res.setHeader directly for debugging purposes to see if it shows up
+    res.setHeader('X-Custom-Header', 'Hello-From-Server');
+
+    console.log('--- TEST LOGS ---');
+    console.log('User logged in, attempting to set test cookie.');
+    console.log('Headers just before res.status().json() (Test):', res.getHeaders());
+    console.log('Are headers already sent (Test)?', res.headersSent);
+    console.log('--- END TEST LOGS ---');
+
+    const id = user.id;
+    const username = user.username;
+    const email = user.email;
+    res.status(200).json({id, username, email});
+
+    // You can comment out req.session.save() for this test, as we are bypassing session
+    // If you keep req.session.save(), the above res.cookie() might conflict or be overwritten
+    // by express-session if it decides to finally send its own cookie.
+    // For this test, it's best to comment out the entire app.use(session(...)) block in index.js
+    // to ensure express-session is not interfering.
 };
 
 export const logout = async (req, res) => {
