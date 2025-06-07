@@ -3,45 +3,24 @@ import argon2 from "argon2";
 import { sendOTP, verifyOTP as validateOTP } from '../service/otpService.js';
 
 export const login = async (req, res) => {
-    const user = await Users.findOne({
-        where: {
-            email: req.body.email
-        }
-    });
-    if(!user) return res.status(404).json({error: "User not found"});
+  const user = await Users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({ error: "User tidak ditemukan " });
+  }
+  const match = await argon2.verify(user.password, req.body.password);
+  if (!match) {
+    return res.status(400).json({ error: "Password atau email anda salah" });
+  }
 
-    const match = await argon2.verify(user.password, req.body.password);
-    if(!match) return res.status(400).json({error: "Wrong Password"});
-
-    console.log('User object retrieved:', user.toJSON());
-    console.log('Value of user.id BEFORE session set:', user.id);
-
-    console.log('Before setting req.session.userId:', req.session);
-    req.session.userId = user.id;
-    console.log('After setting req.session.userId:', req.session);
-
-    // Explicitly check the headers before sending
-    console.log('Headers before sending response (from inside req.session.save):', res.getHeaders());
-    console.log('Are headers already sent?', res.headersSent);
-
-
-    req.session.save((err) => {
-        if (err) {
-            console.error('Error saving session:', err);
-            return res.status(500).json({ error: "Session save failed" });
-        }
-        console.log('Session saved successfully. About to send response...');
-
-        // Final check on headers just before res.status().json()
-        console.log('Headers just before res.status().json():', res.getHeaders());
-        console.log('Are headers already sent (final check)?', res.headersSent);
-
-
-        const id = user.id;
-        const username = user.username;
-        const email = user.email;
-        res.status(200).json({id, username, email});
-    });
+  req.session.userId = user.id;
+  const id = user.id;
+  const username = user.username;
+  const email = user.email;
+  res.status(200).json({ id, username, email });
 };
 
 export const logout = async (req, res) => {
