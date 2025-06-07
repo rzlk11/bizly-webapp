@@ -33,12 +33,11 @@ app.use(
   session({
     store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
       secure: true,
       sameSite: "none",
-      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 jam dalam milliseconds
     },
   })
@@ -55,12 +54,12 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/auth", authRoute);
-// app.use("/categories", categoriesRoute);
-// app.use("/products", productsRoute);
-// app.use("/transactions", transactionRoute);
-// app.use("/users", userRoute);
-// app.use("/transactions-products", transactionProductRoute);
-// app.use("/ml", mlRoute);
+app.use("/categories", categoriesRoute);
+app.use("/products", productsRoute);
+app.use("/transactions", transactionRoute);
+app.use("/users", userRoute);
+app.use("/transactions-products", transactionProductRoute);
+app.use("/ml", mlRoute);
 
 // Start the server
 app.listen(PORT, () => {
