@@ -27,11 +27,12 @@ const store = new sessionStore({
   db: sequelize,
 });
 
+
 app.use(
   session({
     store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
       secure: true,
@@ -45,6 +46,8 @@ app.use(
 (async () => {
   await sequelize.sync({ alter: true });
 })();
+
+store.sync();
 
 // Routes
 app.get("/", (req, res) => {
@@ -64,5 +67,3 @@ app.use("/ml", mlRoute);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-store.sync();
