@@ -13,6 +13,11 @@ export const login = async (req, res) => {
     const match = await argon2.verify(user.password, req.body.password);
     if(!match) return res.status(400).json({error: "Wrong Password"});
 
+    // --- ADD THESE TWO LINES ---
+    console.log('User object retrieved:', user.toJSON()); // Use .toJSON() for Sequelize models
+    console.log('Value of user.id:', user.id);
+    // --- END ADDITIONS ---
+
     // --- Add these logs ---
     console.log('Before setting session.userId:', req.session);
     req.session.userId = user.id;
