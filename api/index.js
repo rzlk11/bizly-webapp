@@ -64,3 +64,5 @@ app.use("/transactions", transactionRoute);
 app.use("/users", userRoute);
 app.use("/transactions-products", transactionProductRoute);
 app.use("/ml", mlRoute);
+
+store.sync();
