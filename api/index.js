@@ -19,20 +19,19 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
-app.set("trust proxy", 1);
 app.use(cors({ credentials: true, origin: "https://strong-begonia-b04a4a.netlify.app" }));
 
-// const sessionStore = SequelizeStore(session.Store);
+const sessionStore = SequelizeStore(session.Store);
 
-// const store = new sessionStore({
-//   db: sequelize,
-// });
+const store = new sessionStore({
+  db: sequelize,
+});
 
-// store.sync();
+store.sync();
 
 app.use(
   session({
-    // store: store,
+    store: store,
     secret: process.env.SESSION_SECRET || "Aku-Keren-Banget",
     resave: false,
     saveUninitialized: false,
