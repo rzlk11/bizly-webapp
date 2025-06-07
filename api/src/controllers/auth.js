@@ -3,24 +3,34 @@ import argon2 from "argon2";
 import { sendOTP, verifyOTP as validateOTP } from '../service/otpService.js';
 
 export const login = async (req, res) => {
-  const user = await Users.findOne({
-    where: {
-      email: req.body.email,
-    },
-  });
-  if (!user) {
-    return res.status(404).json({ error: "User tidak ditemukan " });
-  }
-  const match = await argon2.verify(user.password, req.body.password);
-  if (!match) {
-    return res.status(400).json({ error: "Password atau email anda salah" });
-  }
+    const user = await Users.findOne({
+        where: {
+            email: req.body.email
+        }
+    });
+    if(!user) return res.status(404).json({error: "User not found"});
 
-  req.session.userId = user.id;
-  const id = user.id;
-  const username = user.username;
-  const email = user.email;
-  res.status(200).json({ id, username, email });
+    const match = await argon2.verify(user.password, req.body.password);
+    if(!match) return res.status(400).json({error: "Wrong Password"});
+
+    // --- Add these logs ---
+    console.log('Before setting session.userId:', req.session);
+    req.session.userId = user.uuid;
+    console.log('After setting session.userId:', req.session);
+
+    // Ensure session is saved before sending response
+    req.session.save((err) => {
+        if (err) {
+            console.error('Error saving session:', err);
+            return res.status(500).json({ error: "Session save failed" });
+        }
+        console.log('Session saved successfully. Sending response...');
+
+        const uuid = user.uuid;
+        const username = user.username;
+        const email = user.email;
+        res.status(200).json({uuid, username, email});
+    });
 };
 
 export const logout = async (req, res) => {
