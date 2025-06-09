@@ -45,9 +45,9 @@ app.use(
   })
 );
 
-// (async () => {
-//   await sequelize.sync({ alter: true });
-// })();
+(async () => {
+  await sequelize.sync({ alter: true });
+})();
 
 // Routes
 app.get("/", (req, res) => {
