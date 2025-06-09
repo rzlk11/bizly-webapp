@@ -48,7 +48,7 @@ const Transactions = db.define("transactions", {
     },
   },
   transaction_date: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
       notEmpty: true,

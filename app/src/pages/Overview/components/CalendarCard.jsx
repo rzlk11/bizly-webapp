@@ -136,7 +136,7 @@ const CalendarCard = ({
           type: t.type === "Pemasukan" ? "income" : "expense",
         }));
 
-        console.log(normalized)
+        console.log('normalized transactions: ', normalized)
 
         setSelectedDateTransactions(normalized);        
 
